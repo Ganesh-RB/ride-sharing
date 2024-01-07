@@ -26,6 +26,7 @@
 
 .App-body {
   min-height: 100vh;
+  padding: 100px 0px;
   color: #333;
   background-color: #fff;
   display: flex;

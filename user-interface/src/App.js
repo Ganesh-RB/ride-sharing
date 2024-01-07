@@ -15,14 +15,30 @@ function App() {
     window.location.pathname.substring(1) || "home"
   );
 
+   const [menuItems, setMenuItems] = React.useState([
+     {
+       title: "Login",
+       href: "login",
+     },
+   ]);
+
+   const onLogin = () => {
+      setMenuItems([
+        {
+          title: "logout",
+          href: "/",
+        },
+      ]);
+    }
+
   return (
     <NextUIProvider>
       <BrowserRouter>
-        <Header className="App-header" currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} />
-        <div className="App-body">
+        <Header className="App-header" currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} menuItems={menuItems} />
+        <div className="App-body p-10 m-10">
           <Routes>
             <Route path="/" element={<Home /> } />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login onLogin={onLogin} />} />
             <Route
               path="*"
               element={

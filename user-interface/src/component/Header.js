@@ -13,23 +13,9 @@ import { Link } from "react-router-dom";
 const Header = (props) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-  const menuItems = [
-    {
-      title: "Home",
-      href: "/",
-    },
-    {
-      title: "Login",
-      href: "login",
-    },
-    {
-      title: "Paper",
-      href: "paper",
-    },
-  ];
 
   return (
-    <Navbar 
+    <Navbar
       onMenuOpenChange={setIsMenuOpen}
       className="bg-primary-300"
       classNames={{
@@ -54,8 +40,10 @@ const Header = (props) => {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand>
-          <p className="font-bold text-inherit">Research Paper Inquiry</p>
+        <NavbarBrand className="w-full">
+          <Link to="/" className="flex items-center gap-2">
+            <p className="font-bold text-inherit">Ride Sharng</p>
+          </Link>
         </NavbarBrand>
       </NavbarContent>
 
@@ -78,7 +66,7 @@ const Header = (props) => {
             </NavbarContent> */}
 
       <NavbarContent justify="end">
-        {menuItems.map((item, index) => (
+        {props.menuItems.map((item, index) => (
           <NavbarItem
             key={`${item}-${index}`}
             className="hidden sm:flex gap-4"
@@ -89,7 +77,7 @@ const Header = (props) => {
             <Link
               to={item.href}
               onClick={() => props.setCurrentMenu(item.title)}
-              color="primary"   
+              color="primary"
               className="w-full"
             >
               {item.title}
@@ -101,7 +89,7 @@ const Header = (props) => {
         ))}
       </NavbarContent>
       <NavbarMenu>
-        {menuItems.map((item, index) => (
+        {props.menuItems.map((item, index) => (
           <NavbarMenuItem
             key={`${item}-${index}`}
             isActive={props.currentMenu === item.title}

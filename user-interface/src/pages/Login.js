@@ -13,10 +13,20 @@ import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon";
 import { Mail } from "../utils/Mail";
 import { Password } from "../utils/Password";
 
-export default function Login() {
+export default function Login(props) {
   const [isVisible, setIsVisible] = React.useState(false);
+  const [mail, setMail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+  
+  const loginHandler = () => {
+    // redirect to home page
+    props.onLogin();    
+    window.location.href = "/";
+
+  }
+
   return (
     <Card className="min-w-[400px]">
       <CardHeader className="flex gap-3">Login</CardHeader>
@@ -24,6 +34,7 @@ export default function Login() {
       <CardBody className="flex flex-col gap-5 p-10">
         <Input
           variant="bordered"
+          onValueChange={(value) => setMail(value)}
           label="Email"
           labelPlacement="outside"
           placeholder="Email"
@@ -33,6 +44,7 @@ export default function Login() {
         />
         <Input
           variant="bordered"
+          onValueChange={(value) => setPassword(value)}
           placeholder="Password"
           label="Password"
           labelPlacement="outside"
@@ -61,7 +73,7 @@ export default function Login() {
             Forgot password?
           </button>
         </div>
-        <button className="bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-md focus:outline-none w-full mt-3 text-sm">
+        <button className="bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-md focus:outline-none w-full mt-3 text-sm" onClick={loginHandler}>
           Login
         </button>
       </CardBody>
