@@ -19,9 +19,6 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @Builder
 public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
 
     private Date startDate;
     private Date endDate;
@@ -29,7 +26,7 @@ public class Booking {
     private long fromId;
     private long toId;
     private long price;
-    private long carId;
+    private long cabId;
         
     @Id
     @GeneratedValue(generator = "uuid")
@@ -39,4 +36,18 @@ public class Booking {
 
 
 }
-    
+
+// example request 
+/*
+{
+    "startDate": "2021-01-01",
+    "endDate": "2021-01-02",
+    "bookerId": 1,
+    "fromId": 1,
+    "toId": 2,
+    "price": 100,
+    "carId": 1
+}
+
+
+ */

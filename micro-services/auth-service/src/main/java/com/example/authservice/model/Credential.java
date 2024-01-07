@@ -1,27 +1,26 @@
-package com.example.bookingservice.model;
-
-import java.sql.Date;
+package com.example.authservice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "booking_user")
-@Builder
-@Getter
+@Table(name = "credential")
 @AllArgsConstructor
-@Setter
 @NoArgsConstructor
-public class BookingUser {
+@Getter
+@Setter
+public class Credential {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String bookingId;
-    private long userId;
-    private Date bookingDate;
+    private String username;
+    private String password;
 }
