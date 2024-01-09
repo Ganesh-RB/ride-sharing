@@ -2,7 +2,11 @@ package com.example.authservice.service;
 
 import java.util.List;
 
+import com.example.authservice.dto.CredentialDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import com.example.authservice.model.Credential;
@@ -13,28 +17,18 @@ public class CredentialService {
     @Autowired
     private CredentialRepository credentialRepository;
 
-    public String login(Credential credential) {
-        List<Credential> credentials = credentialRepository.findAll();
-        // validate credential
-        for (Credential c : credentials) {
-            if (c.getUsername().equals(credential.getUsername())
-                    && c.getPassword().equals(credential.getPassword())) {
-                // generate token
-                return c.getId().toString();
-            }
-        }
-        return null;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public UserDetailsService login(Credential credential) {
+        CredentialDetails credentialDetails = new CredentialDetails(credential);
+        return new InMemoryUserDetailsManager(credentialDetails);
     }
 
-    public String signup(Credential credential) {
-        List<Credential> credentials = credentialRepository.findAll();
-        // validate credential
-        for (Credential c : credentials) {
-            if (c.getUsername().equals(credential.getUsername())) {
-                return "username already exists";
-            }
-        }
-        credentialRepository.save(credential);
-        return credential.getId().toString();
+    public Credential signup(Credential credential) {
+        Credential encodedCredential = new Credential();
+        encodedCredential.setUsername(credential.getUsername());
+        encodedCredential.setPassword(this.passwordEncoder.encode(credential.getPassword()));
+        return credentialRepository.save(encodedCredential);
     }
 }
