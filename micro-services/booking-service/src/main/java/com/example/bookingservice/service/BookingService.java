@@ -32,23 +32,32 @@ public class BookingService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public static String generateUrl(String uuid) {
+    public static String generateJoinUrl(String uuid) {
         return "http://localhost:8080/api/booking/retrieve/" + uuid;
+    }
+
+    public static String generateTrackUrl(String uuid) {
+        return "http://localhost:8080/api/booking/track/" + uuid;
+    }
+
+    private BookingData fromBooking(Booking booking){
+        return BookingData.builder()
+                .startDate(booking.getStartDate())
+                .endDate(booking.getEndDate())
+                .bookerId(booking.getBookerId())
+                .from(locationRepository.findById(booking.getFromId()).orElse(null))
+                .to(locationRepository.findById(booking.getToId()).orElse(null))
+                .price(booking.getPrice())
+                .cab(cabRepository.findById(booking.getCabId()).orElse(null))
+                .joinUrl(generateJoinUrl(booking.getUuid()))
+                .trackUrl(generateTrackUrl(booking.getUuid()))
+                .build();
     }
 
     public List<BookingData> getAllBookings() {
         List<BookingData> bookings = new ArrayList<>();
         bookingRepository.findAll().forEach(booking -> {
-            bookings.add(BookingData.builder()
-                    .startDate(booking.getStartDate())
-                    .endDate(booking.getEndDate())
-                    .bookerId(booking.getBookerId())
-                    .from(locationRepository.findById(booking.getFromId()).orElse(null))
-                    .to(locationRepository.findById(booking.getToId()).orElse(null))
-                    .price(booking.getPrice())
-                    .cab(cabRepository.findById(booking.getCabId()).orElse(null))
-                    .url(generateUrl(booking.getUuid()))
-                    .build());
+            bookings.add(fromBooking(booking));
         });
 
         return bookings;
@@ -56,16 +65,7 @@ public class BookingService {
 
     public Optional<BookingData> getBookingById(String bookingId){
         return bookingRepository.findById(bookingId).
-                map(booking -> BookingData.builder()
-                        .startDate(booking.getStartDate())
-                        .endDate(booking.getEndDate())
-                        .bookerId(booking.getBookerId())
-                        .from(locationRepository.findById(booking.getFromId()).orElse(null))
-                        .to(locationRepository.findById(booking.getToId()).orElse(null))
-                        .price(booking.getPrice())
-                        .cab(cabRepository.findById(booking.getCabId()).orElse(null))
-                        .url(generateUrl(booking.getUuid()))
-                        .build());
+                map(this::fromBooking);
         
     }
 
@@ -78,15 +78,7 @@ public class BookingService {
         if (booking == null)
             return null;
 
-        return BookingData.builder().startDate(booking.getStartDate())
-                .endDate(booking.getEndDate())
-                .bookerId(booking.getBookerId())
-                .from(locationRepository.findById(booking.getFromId()).orElse(null))
-                .to(locationRepository.findById(booking.getToId()).orElse(null))
-                .price(booking.getPrice())
-                .cab(cabRepository.findById(booking.getCabId()).orElse(null))
-                .url(generateUrl(booking.getUuid()))
-                .build();
+        return fromBooking(booking);
     }
 
     public BookingData joinBooking(BookingJoinData bookingJoinData) {

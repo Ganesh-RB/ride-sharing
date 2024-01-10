@@ -18,5 +18,6 @@ public class BookingData {
     private Location to;
     private long price;
     private Cab cab;
-    private String url;
+    private String joinUrl;
+    private String trackUrl;
 }
