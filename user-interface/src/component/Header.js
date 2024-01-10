@@ -76,7 +76,7 @@ const Header = (props) => {
           >
             <Link
               to={item.href}
-              onClick={() => props.setCurrentMenu(item.title)}
+              onClick={() => {props.setCurrentMenu(item.title); item.handler && item.handler();}}
               color="primary"
               className="w-full"
             >
