@@ -1,5 +1,6 @@
 package com.example.authservice.controller;
 
+import com.example.authservice.dto.CredentialDetails;
 import com.example.authservice.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,8 @@ import com.example.authservice.repository.CredentialRepository;
 import com.example.authservice.service.CredentialService;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 public class CredentialController {
@@ -38,34 +41,26 @@ public class CredentialController {
     @Autowired
     private HttpSession session;
 
+
+
+    private static final Logger logger = LoggerFactory.getLogger(CredentialController.class);
+
+
     @GetMapping("/")
     public String greetings(){
         return "Greetings Home Page";
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody Credential credential) {
+    public Map<String, Object> login(@RequestBody Credential credential) {
         System.out.println("User login with credential: " + credential.toString());
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(credential.getUsername(), credential.getPassword());
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
-
-//        SecurityContext sc = SecurityContextHolder.getContext();
-//        sc.setAuthentication(authenticationResponse);
-        session.setAttribute("Id", credential.getUsername());
-        System.out.println(session.toString());
-        return authenticationResponse.isAuthenticated();
+        return credentialService.createLoginInfo(authenticationResponse);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<Void> login(@RequestBody Credential credential) {
-//        Authentication authenticationRequest =
-//                UsernamePasswordAuthenticationToken.unauthenticated(credential.getUsername(), credential.getPassword());
-//        Authentication authenticationResponse =
-//                this.authenticationManager.authenticate(authenticationRequest);
-//    }
-//
     @PostMapping("/signup")
     public Credential signup(@RequestBody Credential credential) {
         System.out.println("User signup with credential: " + credential.toString());

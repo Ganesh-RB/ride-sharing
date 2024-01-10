@@ -2,6 +2,7 @@ package com.example.bookingservice.controller;
 
 import java.util.List;
 
+import com.example.bookingservice.dto.BookingJoinData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +32,34 @@ public class BookingController {
     }
 
     @PostMapping("/new")
-    public Booking createBooking(@RequestBody Booking booking) {
-        return bookingRepository.save(booking);
+    public BookingData createBooking(@RequestBody Booking booking) {
+        return bookingService.createBooking(booking);
+    }
+
+    @PostMapping("/join")
+    public BookingData joinBooking(@RequestBody BookingJoinData bookingJoinData){
+        return bookingService.joinBooking(bookingJoinData);
     }
 
     @GetMapping("/retrieve/{url}")
-    public Booking getBooking(@PathVariable("url") String url) {
-        final String uuid = url.substring(url.lastIndexOf('/') + 1);
-        return bookingRepository.findById(uuid).orElse(null);
+    public BookingData getBooking(@PathVariable("url") String url) {
+        return bookingService.getBooking(url);
     }
 
 }
+
+/*
+Create a booking
+
+{
+    "startDate": "2021-01-01",
+    "endDate": "2021-01-02",
+    "bookerId": 1,
+    "fromId": 1,
+    "toId": 2,
+    "price": 100,
+    "carId": 1
+}
+
+
+ */
